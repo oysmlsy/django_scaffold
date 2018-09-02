@@ -1,0 +1,14 @@
+.DS_Store
+.idea/
+**/*.pyc
+0*.py
+*.sqlite3
+/.gitignore
+/.dockerignore
+/deploy.txt
+/Dockerfile
+/reset.sh
+/static/
+/media/
+/venv/
+/.git/
