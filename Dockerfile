@@ -1,6 +1,7 @@
 FROM centos:7
 
 LABEL maintainer="oysmlsy@gmail.com"
+ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
 RUN rpm --import /etc/pki/rpm-gpg/* && \
 yum install -y epel-release && \
@@ -42,6 +43,6 @@ RUN echo -e "\
     CustomLog /$PROJECT_NAME/log/access_log common\n\
 </VirtualHost>\
 " > /etc/httpd/conf.d/$PROJECT_NAME.conf
-ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 TZ=Asia/Shanghai APP_DEBUG=false APP_DEPLOY=true
+ENV TZ=Asia/Shanghai APP_DEBUG=false APP_DEPLOY=true
 EXPOSE 80
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
