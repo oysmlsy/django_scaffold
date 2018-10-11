@@ -4,7 +4,7 @@ PROJECT_NAME=app
 VOLUME_PATH=$HOME/volume
 
 # 运行数据库容器
-docker run --name ${PRODUCTION_NAME}_db -d -v $VOLUME_PATH/$PRODUCTION_NAME/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=$PRODUCTION_NAME mysql:5.7 --max-allowed-packet=256M --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+docker run --name ${PRODUCTION_NAME}_db -d --restart=on-failure:10 -v $VOLUME_PATH/$PRODUCTION_NAME/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=$PRODUCTION_NAME mysql:5.7 --max-allowed-packet=256M --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
 # 构建镜像
 docker build -t $PRODUCTION_NAME .
@@ -19,4 +19,4 @@ docker run --rm --link ${PRODUCTION_NAME}_db:mysql -v $VOLUME_PATH/$PRODUCTION_N
 docker run --rm --link ${PRODUCTION_NAME}_db:mysql -v $VOLUME_PATH/$PRODUCTION_NAME/media:/$PROJECT_NAME/media -v $VOLUME_PATH/$PRODUCTION_NAME/log:/$PROJECT_NAME/log $PRODUCTION_NAME /bin/sh -c "chown -R apache:apache /$PROJECT_NAME"
 
 # 正式运行应用容器
-docker run --name $PRODUCTION_NAME --link ${PRODUCTION_NAME}_db:mysql -v $VOLUME_PATH/$PRODUCTION_NAME/media:/$PROJECT_NAME/media -v $VOLUME_PATH/$PRODUCTION_NAME/log:/$PROJECT_NAME/log -d -p 80:80 $PRODUCTION_NAME
+docker run --name $PRODUCTION_NAME -d --restart=on-failure:10 --link ${PRODUCTION_NAME}_db:mysql -v $VOLUME_PATH/$PRODUCTION_NAME/media:/$PROJECT_NAME/media -v $VOLUME_PATH/$PRODUCTION_NAME/log:/$PROJECT_NAME/log -p 80:80 $PRODUCTION_NAME
